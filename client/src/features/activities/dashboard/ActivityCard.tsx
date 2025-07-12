@@ -1,12 +1,13 @@
 import { Box, Button, Card, CardActions, CardContent, Chip, Typography } from "@mui/material";
 import type { Activity } from "../../../lib/types";
+import { useActivities } from "../../../lib/hooks/useActivities";
 
 type Props = {
   activity: Activity;
   selectedActivity: (id: string) => void;
-  deleteActivity: (id: string) => void;
 }
-export default function ActivityCard({ activity, selectedActivity, deleteActivity }: Props) {
+export default function ActivityCard({ activity, selectedActivity}: Props) {
+    const {deleteActivity} = useActivities();
   return (
     <Card sx={{ borderRadius: 3 }}>
       <CardContent>
@@ -25,7 +26,11 @@ export default function ActivityCard({ activity, selectedActivity, deleteActivit
         <Chip label={activity.category} variant="outlined" />
         <Box display={'flex'} gap={3}>
                   <Button onClick={()=>selectedActivity(activity.id)} size="medium" variant="contained">view</Button>
-                  <Button onClick={()=>deleteActivity(activity.id)} color="error" size="medium" variant="contained">delete</Button>
+                  <Button onClick={()=>deleteActivity.mutate(activity.id)} 
+                  disabled={deleteActivity.isPending} 
+                  color="error" 
+                  size="medium"
+                  variant="contained">delete</Button>
         </Box>
 
         </CardActions>
